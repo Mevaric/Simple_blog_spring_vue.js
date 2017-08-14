@@ -36,7 +36,7 @@ public class BlogApplication {
 	public void authenticationManager(AuthenticationManagerBuilder builder, ru.ne1ghost.blog.repositories.UserRepository repository, UserService service) throws Exception {
 		//Setup a default user if db is empty
 		if (repository.count()==0)
-            service.save(new User("netghost", "masha29071990", Arrays.asList(new Role("USER"), new Role("ACTUATOR"))));
+            service.save(new User("netghost", "netghost", Arrays.asList(new Role("USER"), new Role("ACTUATOR"))));
 
 
 

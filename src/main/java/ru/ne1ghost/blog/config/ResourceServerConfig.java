@@ -20,6 +20,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/","/home","/register","/login").permitAll()
                 .antMatchers("/private/**").authenticated()
                 .antMatchers("/post").authenticated();
+        		//.antMatchers("/created");
     }
 
 

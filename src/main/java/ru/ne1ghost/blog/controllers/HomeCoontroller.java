@@ -13,4 +13,9 @@ public class HomeCoontroller {
     public String login(){
         return "login";
     }
+    @GetMapping(value = "/createdpost")
+    public String cteatedPost()
+    {
+    	return "created";
+    }
 }
