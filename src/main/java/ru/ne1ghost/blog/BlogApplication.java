@@ -12,13 +12,22 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import org.springframework.boot.builder.SpringApplicationBuilder;
+
+import org.springframework.boot.web.support.SpringBootServletInitializer;
+
 import java.util.Arrays;
 
 @SpringBootApplication
-public class BlogApplication {
+public class BlogApplication extends SpringBootServletInitializer  {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(BlogApplication.class);
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(BlogApplication.class, args);
