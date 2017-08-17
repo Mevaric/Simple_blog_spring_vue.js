@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             <div class="twelve columns">
-                <h1>NetGhost | blog</h1>
+                <h1>My blog</h1>
                 <ul>
                     <li v-for="post in posts">
                         <h3><a :href="getLink(post)">{{post.title}}</a></h3>
@@ -40,6 +40,7 @@
                 return '/post/' + post.id;
             }
         }
+
     });
 </script>
 </html>

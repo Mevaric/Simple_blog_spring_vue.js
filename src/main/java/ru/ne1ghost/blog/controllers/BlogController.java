@@ -1,12 +1,16 @@
 package ru.ne1ghost.blog.controllers;
 
+import ru.ne1ghost.blog.entities.Post;
+import ru.ne1ghost.blog.config.CustomUserDetails;
+import ru.ne1ghost.blog.entities.Comment;
+import ru.ne1ghost.blog.entities.User;
+import ru.ne1ghost.blog.pojos.CommentPojo;
+import ru.ne1ghost.blog.service.CommentService;
+import ru.ne1ghost.blog.service.PostService;
+import ru.ne1ghost.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.ne1ghost.blog.config.CustomUserDetails;
-import ru.ne1ghost.blog.entities.Post;
-import ru.ne1ghost.blog.services.PostService;
-import ru.ne1ghost.blog.services.UserService;
 
 import java.util.Date;
 import java.util.List;
@@ -20,22 +24,23 @@ public class BlogController {
     @Autowired
     private UserService userService;
 
-    /*
-    @GetMapping(value = "/")
-    public String index() {
-        return "index";
-    }
-    */
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping(value = "/posts")
-    public List<Post> posts(){
+    public List<Post> posts() {
         return postService.getAllPosts();
+    }
+
+    @GetMapping(value = "/the_post/{id}")
+    public Post getPostById(@PathVariable Long id) {
+        return postService.getPost(id);
     }
 
     @PostMapping(value = "/post")
     public String publishPost(@RequestBody Post post) {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(post.getDateCreated() == null)
+        if (post.getDateCreated() == null)
             post.setDateCreated(new Date());
         post.setCreator(userService.getUser(userDetails.getUsername()));
         postService.insert(post);
@@ -43,7 +48,36 @@ public class BlogController {
     }
 
     @GetMapping(value = "/posts/{username}")
-    public List<Post> postsByUserame(@PathVariable String username){
+    public List<Post> postsByUser(@PathVariable String username) {
         return postService.findByUser(userService.getUser(username));
     }
+
+    @DeleteMapping(value = "/post/{id}")
+    public boolean deletePost(@PathVariable Long id) {
+        return postService.deletePost(id);
+    }
+
+    @DeleteMapping(value = "/comment/{id}")
+    public boolean deleteComment(@PathVariable Long id) {
+        return commentService.deletePost(id);
+    }
+
+
+    @GetMapping(value = "/comments/{postId}")
+    public List<Comment> getComments(@PathVariable Long postId) {
+        return commentService.getComments(postId);
+    }
+
+    @PostMapping(value = "/post/postComment")
+    public boolean postComment(@RequestBody CommentPojo comment) {
+        Post post = postService.find(comment.getPostId());
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User creator = userService.getUser(userDetails.getUsername());
+        if (post == null || creator == null)
+            return false;
+
+        commentService.comment(new Comment(comment.getText(), post, creator));
+        return true;
+    }
+
 }

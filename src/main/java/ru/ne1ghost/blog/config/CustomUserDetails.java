@@ -27,6 +27,7 @@ public class CustomUserDetails implements UserDetails {
 
     /**
      * Translates the List<Role> to a List<GrantedAuthority>
+     *
      * @param roles the input list of roles.
      * @return a list of granted authorities
      */

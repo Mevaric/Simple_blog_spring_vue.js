@@ -25,12 +25,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     /**
      * Setting up the endpointsconfigurer authentication manager.
      * The AuthorizationServerEndpointsConfigurer defines the authorization and token endpoints and the token services.
+     *
      * @param endpoints
      * @throws Exception
      */
@@ -39,26 +37,31 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.authenticationManager(authenticationManager);
         endpoints.tokenStore(getTokenStore());
     }
+
     @Bean
-    public TokenStore getTokenStore(){
+    public TokenStore getTokenStore() {
         return new InMemoryTokenStore();
     }
+
     /**
      * Setting up the clients with a clientId, a clientSecret, a scope, the grant types and the authorities.
+     *
      * @param clients
      * @throws Exception
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient("my-trusted-client")
+        clients.inMemory().
+                withClient("my-trusted-client")
                 .authorizedGrantTypes("client_credentials", "password")
-                .authorities("ROLE_CLIENT","ROLE_TRUSTED_CLIENT").scopes("read","write","trust")
+                .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT").scopes("read", "write", "trust")
                 .resourceIds("oauth2-resource").accessTokenValiditySeconds(5000).secret("secret");
     }
 
     /**
      * We here defines the security constraints on the token endpoint.
      * We set it up to isAuthenticated, which returns true if the user is not anonymous
+     *
      * @param security the AuthorizationServerSecurityConfigurer.
      * @throws Exception
      */
